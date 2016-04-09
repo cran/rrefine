@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="author" content="VP Nagraj" />
+
+<meta name="date" content="2016-04-05" />
+
+<title>rrefine</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; }
+code > span.dt { color: #902000; }
+code > span.dv { color: #40a070; }
+code > span.bn { color: #40a070; }
+code > span.fl { color: #40a070; }
+code > span.ch { color: #4070a0; }
+code > span.st { color: #4070a0; }
+code > span.co { color: #60a0b0; font-style: italic; }
+code > span.ot { color: #007020; }
+code > span.al { color: #ff0000; font-weight: bold; }
+code > span.fu { color: #06287e; }
+code > span.er { color: #ff0000; font-weight: bold; }
+</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+
+
+<link href="data:text/css,body%20%7B%0A%20%20background%2Dcolor%3A%20%23fff%3B%0A%20%20margin%3A%201em%20auto%3B%0A%20%20max%2Dwidth%3A%20700px%3B%0A%20%20overflow%3A%20visible%3B%0A%20%20padding%2Dleft%3A%202em%3B%0A%20%20padding%2Dright%3A%202em%3B%0A%20%20font%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0A%20%20font%2Dsize%3A%2014px%3B%0A%20%20line%2Dheight%3A%201%2E35%3B%0A%7D%0A%0A%23header%20%7B%0A%20%20text%2Dalign%3A%20center%3B%0A%7D%0A%0A%23TOC%20%7B%0A%20%20clear%3A%20both%3B%0A%20%20margin%3A%200%200%2010px%2010px%3B%0A%20%20padding%3A%204px%3B%0A%20%20width%3A%20400px%3B%0A%20%20border%3A%201px%20solid%20%23CCCCCC%3B%0A%20%20border%2Dradius%3A%205px%3B%0A%0A%20%20background%2Dcolor%3A%20%23f6f6f6%3B%0A%20%20font%2Dsize%3A%2013px%3B%0A%20%20line%2Dheight%3A%201%2E3%3B%0A%7D%0A%20%20%23TOC%20%2Etoctitle%20%7B%0A%20%20%20%20font%2Dweight%3A%20bold%3B%0A%20%20%20%20font%2Dsize%3A%2015px%3B%0A%20%20%20%20margin%2Dleft%3A%205px%3B%0A%20%20%7D%0A%0A%20%20%23TOC%20ul%20%7B%0A%20%20%20%20padding%2Dleft%3A%2040px%3B%0A%20%20%20%20margin%2Dleft%3A%20%2D1%2E5em%3B%0A%20%20%20%20margin%2Dtop%3A%205px%3B%0A%20%20%20%20margin%2Dbottom%3A%205px%3B%0A%20%20%7D%0A%20%20%23TOC%20ul%20ul%20%7B%0A%20%20%20%20margin%2Dleft%3A%20%2D2em%3B%0A%20%20%7D%0A%20%20%23TOC%20li%20%7B%0A%20%20%20%20line%2Dheight%3A%2016px%3B%0A%20%20%7D%0A%0Atable%20%7B%0A%20%20margin%3A%201em%20auto%3B%0A%20%20border%2Dwidth%3A%201px%3B%0A%20%20border%2Dcolor%3A%20%23DDDDDD%3B%0A%20%20border%2Dstyle%3A%20outset%3B%0A%20%20border%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0A%20%20border%2Dwidth%3A%202px%3B%0A%20%20padding%3A%205px%3B%0A%20%20border%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0A%20%20border%2Dwidth%3A%201px%3B%0A%20%20border%2Dstyle%3A%20inset%3B%0A%20%20line%2Dheight%3A%2018px%3B%0A%20%20padding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0A%20%20border%2Dleft%2Dstyle%3A%20none%3B%0A%20%20border%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0A%20%20background%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0A%0Ap%20%7B%0A%20%20margin%3A%200%2E5em%200%3B%0A%7D%0A%0Ablockquote%20%7B%0A%20%20background%2Dcolor%3A%20%23f6f6f6%3B%0A%20%20padding%3A%200%2E25em%200%2E75em%3B%0A%7D%0A%0Ahr%20%7B%0A%20%20border%2Dstyle%3A%20solid%3B%0A%20%20border%3A%20none%3B%0A%20%20border%2Dtop%3A%201px%20solid%20%23777%3B%0A%20%20margin%3A%2028px%200%3B%0A%7D%0A%0Adl%20%7B%0A%20%20margin%2Dleft%3A%200%3B%0A%7D%0A%20%20dl%20dd%20%7B%0A%20%20%20%20margin%2Dbottom%3A%2013px%3B%0A%20%20%20%20margin%2Dleft%3A%2013px%3B%0A%20%20%7D%0A%20%20dl%20dt%20%7B%0A%20%20%20%20font%2Dweight%3A%20bold%3B%0A%20%20%7D%0A%0Aul%20%7B%0A%20%20margin%2Dtop%3A%200%3B%0A%7D%0A%20%20ul%20li%20%7B%0A%20%20%20%20list%2Dstyle%3A%20circle%20outside%3B%0A%20%20%7D%0A%20%20ul%20ul%20%7B%0A%20%20%20%20margin%2Dbottom%3A%200%3B%0A%20%20%7D%0A%0Apre%2C%20code%20%7B%0A%20%20background%2Dcolor%3A%20%23f7f7f7%3B%0A%20%20border%2Dradius%3A%203px%3B%0A%20%20color%3A%20%23333%3B%0A%7D%0Apre%20%7B%0A%20%20white%2Dspace%3A%20pre%2Dwrap%3B%20%20%20%20%2F%2A%20Wrap%20long%20lines%20%2A%2F%0A%20%20border%2Dradius%3A%203px%3B%0A%20%20margin%3A%205px%200px%2010px%200px%3B%0A%20%20padding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0A%20%20background%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0A%0Acode%20%7B%0A%20%20font%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0A%20%20font%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0A%20%20padding%3A%202px%200px%3B%0A%7D%0A%0Adiv%2Efigure%20%7B%0A%20%20text%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0A%20%20background%2Dcolor%3A%20%23FFFFFF%3B%0A%20%20padding%3A%202px%3B%0A%20%20border%3A%201px%20solid%20%23DDDDDD%3B%0A%20%20border%2Dradius%3A%203px%3B%0A%20%20border%3A%201px%20solid%20%23CCCCCC%3B%0A%20%20margin%3A%200%205px%3B%0A%7D%0A%0Ah1%20%7B%0A%20%20margin%2Dtop%3A%200%3B%0A%20%20font%2Dsize%3A%2035px%3B%0A%20%20line%2Dheight%3A%2040px%3B%0A%7D%0A%0Ah2%20%7B%0A%20%20border%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0A%20%20padding%2Dtop%3A%2010px%3B%0A%20%20padding%2Dbottom%3A%202px%3B%0A%20%20font%2Dsize%3A%20145%25%3B%0A%7D%0A%0Ah3%20%7B%0A%20%20border%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0A%20%20padding%2Dtop%3A%2010px%3B%0A%20%20font%2Dsize%3A%20120%25%3B%0A%7D%0A%0Ah4%20%7B%0A%20%20border%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0A%20%20margin%2Dleft%3A%208px%3B%0A%20%20font%2Dsize%3A%20105%25%3B%0A%7D%0A%0Ah5%2C%20h6%20%7B%0A%20%20border%2Dbottom%3A%201px%20solid%20%23ccc%3B%0A%20%20font%2Dsize%3A%20105%25%3B%0A%7D%0A%0Aa%20%7B%0A%20%20color%3A%20%230033dd%3B%0A%20%20text%2Ddecoration%3A%20none%3B%0A%7D%0A%20%20a%3Ahover%20%7B%0A%20%20%20%20color%3A%20%236666ff%3B%20%7D%0A%20%20a%3Avisited%20%7B%0A%20%20%20%20color%3A%20%23800080%3B%20%7D%0A%20%20a%3Avisited%3Ahover%20%7B%0A%20%20%20%20color%3A%20%23BB00BB%3B%20%7D%0A%20%20a%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0A%20%20%20%20text%2Ddecoration%3A%20underline%3B%20%7D%0A%20%20a%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0A%20%20%20%20text%2Ddecoration%3A%20underline%3B%20%7D%0A%0A%2F%2A%20Class%20described%20in%20https%3A%2F%2Fbenjeffrey%2Ecom%2Fposts%2Fpandoc%2Dsyntax%2Dhighlighting%2Dcss%0A%20%20%20Colours%20from%20https%3A%2F%2Fgist%2Egithub%2Ecom%2Frobsimmons%2F1172277%20%2A%2F%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%2F%2A%20Keyword%20%2A%2F%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%2F%2A%20DataType%20%2A%2F%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%2F%2A%20DecVal%20%28decimal%20values%29%20%2A%2F%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%2F%2A%20BaseN%20%2A%2F%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%2F%2A%20Float%20%2A%2F%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%2F%2A%20Char%20%2A%2F%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%2F%2A%20String%20%2A%2F%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%2F%2A%20Comment%20%2A%2F%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%2F%2A%20OtherToken%20%2A%2F%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%2F%2A%20AlertToken%20%2A%2F%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%2F%2A%20Function%20calls%20%2A%2F%20%0Acode%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%2F%2A%20ErrorTok%20%2A%2F%0A%0A" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+
+
+<div id="header">
+<h1 class="title">rrefine</h1>
+<h4 class="author"><em>VP Nagraj</em></h4>
+<h4 class="date"><em>2016-04-05</em></h4>
+</div>
+
+
+<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<p><em>OpenRefine</em> (formerly <em>Google Refine</em>) is a popular, open source data cleaning software<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a>. <strong>rrefine</strong> enables users to programmatically trigger data transfer between R and <em>OpenRefine</em>. Using the functions avaialable in this package, you can import, export or delete a project in <em>OpenRefine</em> directly from an R script. There are several client libraries for automating <em>OpenRefine</em> tasks via Python, nodeJS and Ruby<a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a>. <strong>rrefine</strong> extends this functionality to R users.</p>
+</div>
+<div id="installation" class="section level2">
+<h2>Installation</h2>
+<p>The latest version of <strong>rrefine</strong> is availabe on <a href="https://github.com/vpnagraj/rrefine">Github</a> and can be installed via <strong>devtools</strong> by using the following:</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># install.packages(&quot;devtools&quot;)</span>
+devtools::<span class="kw">install_github</span>(<span class="st">&quot;vpnagraj/rrefine&quot;</span>)
+<span class="kw">library</span>(rrefine)</code></pre>
+</div>
+<div id="lateformeeting" class="section level2">
+<h2><code>lateformeeting</code></h2>
+<p><strong>rrefine</strong> includes a sample “dirty” data set to illustrate its features. This object (<code>lateformeeting</code>) is a simulated data frame that holds 63 observations of dates, days of the week, numbers of hours slept and indicators of whether or not the subject was on time for work. The data are recorded in inconsistent formats and will require cleaning in order to be parsed correctly by R. You can take a look at how messy things are below:</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">theDate</th>
+<th align="left">what.day.whas.it</th>
+<th align="left">sleephours</th>
+<th align="left">was.i.on.time.for.work</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">1/8/99</td>
+<td align="left">Friday</td>
+<td align="left">7</td>
+<td align="left">Yes</td>
+</tr>
+<tr class="even">
+<td align="left">Janury 15 1999</td>
+<td align="left">friday</td>
+<td align="left">5</td>
+<td align="left">No</td>
+</tr>
+<tr class="odd">
+<td align="left">1/25/1999</td>
+<td align="left">Monday</td>
+<td align="left">8</td>
+<td align="left">No</td>
+</tr>
+<tr class="even">
+<td align="left">1/28/1999</td>
+<td align="left">thursday</td>
+<td align="left">8</td>
+<td align="left">Yes</td>
+</tr>
+<tr class="odd">
+<td align="left">2/9/99</td>
+<td align="left">Tuesday</td>
+<td align="left">six</td>
+<td align="left">Yes</td>
+</tr>
+<tr class="even">
+<td align="left">2/11/1999</td>
+<td align="left">Thursday</td>
+<td align="left">7</td>
+<td align="left">No</td>
+</tr>
+<tr class="odd">
+<td align="left">February 15, 1999</td>
+<td align="left">Monday</td>
+<td align="left">8</td>
+<td align="left">Yes</td>
+</tr>
+<tr class="even">
+<td align="left">2/19/1999</td>
+<td align="left">Friday</td>
+<td align="left">10</td>
+<td align="left">Yes</td>
+</tr>
+<tr class="odd">
+<td align="left">3/3/1999</td>
+<td align="left">Wednesday</td>
+<td align="left">5</td>
+<td align="left">n</td>
+</tr>
+<tr class="even">
+<td align="left">3/4/1999</td>
+<td align="left">Thursday</td>
+<td align="left">9</td>
+<td align="left">Yes</td>
+</tr>
+<tr class="odd">
+<td align="left">3/5/1999</td>
+<td align="left">Fridday</td>
+<td align="left">8</td>
+<td align="left">Y</td>
+</tr>
+<tr class="even">
+<td align="left">March 8, 1999</td>
+<td align="left">Monday</td>
+<td align="left">11</td>
+<td align="left">Yes</td>
+</tr>
+<tr class="odd">
+<td align="left">3/15/99</td>
+<td align="left">Monday</td>
+<td align="left">8</td>
+<td align="left">yep</td>
+</tr>
+<tr class="even">
+<td align="left">3/16/1999</td>
+<td align="left">Tuesday</td>
+<td align="left">8</td>
+<td align="left">Yes</td>
+</tr>
+<tr class="odd">
+<td align="left">3/17/1999</td>
+<td align="left">Wedensday</td>
+<td align="left">6.5</td>
+<td align="left">N</td>
+</tr>
+<tr class="even">
+<td align="left">4/1/99</td>
+<td align="left">Thursday</td>
+<td align="left">7</td>
+<td align="left">Yes</td>
+</tr>
+<tr class="odd">
+<td align="left">4/12/1999</td>
+<td align="left">Monday</td>
+<td align="left">8</td>
+<td align="left">Yes</td>
+</tr>
+<tr class="even">
+<td align="left">4/20/1999</td>
+<td align="left">Tuesday</td>
+<td align="left">10</td>
+<td align="left">Yes</td>
+</tr>
+<tr class="odd">
+<td align="left">4/27/99</td>
+<td align="left">Tuesday</td>
+<td align="left">7</td>
+<td align="left">Yes</td>
+</tr>
+<tr class="even">
+<td align="left">5/5/1999</td>
+<td align="left">Wednesday</td>
+<td align="left">6</td>
+<td align="left">N</td>
+</tr>
+<tr class="odd">
+<td align="left">5/12/1999</td>
+<td align="left">Wednseday</td>
+<td align="left">9</td>
+<td align="left">Yes</td>
+</tr>
+<tr class="even">
+<td align="left">5/13/99</td>
+<td align="left">Thursday</td>
+<td align="left">7</td>
+<td align="left">Yes</td>
+</tr>
+<tr class="odd">
+<td align="left">5/17/1999</td>
+<td align="left">monday</td>
+<td align="left">7 and a half</td>
+<td align="left">Y</td>
+</tr>
+<tr class="even">
+<td align="left">May 25 1999</td>
+<td align="left">Tuesday</td>
+<td align="left">8</td>
+<td align="left">YES</td>
+</tr>
+<tr class="odd">
+<td align="left">5/27/1999</td>
+<td align="left">Thursday</td>
+<td align="left">8</td>
+<td align="left">No</td>
+</tr>
+<tr class="even">
+<td align="left">6/1/1999</td>
+<td align="left">tuesday</td>
+<td align="left">7</td>
+<td align="left">Yes</td>
+</tr>
+<tr class="odd">
+<td align="left">6/7/1999</td>
+<td align="left">Monday</td>
+<td align="left">10</td>
+<td align="left">Yes</td>
+</tr>
+<tr class="even">
+<td align="left">6/11/1999</td>
+<td align="left">Friday</td>
+<td align="left">6</td>
+<td align="left">NO</td>
+</tr>
+<tr class="odd">
+<td align="left">6/15/99</td>
+<td align="left">Tuesday</td>
+<td align="left">8</td>
+<td align="left">Yes</td>
+</tr>
+<tr class="even">
+<td align="left">6/24/1999</td>
+<td align="left">thursday</td>
+<td align="left">7.5</td>
+<td align="left">Yes</td>
+</tr>
+<tr class="odd">
+<td align="left">7/1/1999</td>
+<td align="left">Thursday</td>
+<td align="left">7</td>
+<td align="left">No</td>
+</tr>
+<tr class="even">
+<td align="left">July 6 1999</td>
+<td align="left">Wednesday</td>
+<td align="left">5</td>
+<td align="left">Yes</td>
+</tr>
+<tr class="odd">
+<td align="left">7/12/1999</td>
+<td align="left">Monday</td>
+<td align="left">8</td>
+<td align="left">Y</td>
+</tr>
+<tr class="even">
+<td align="left">7/20/1999</td>
+<td align="left">tuesday</td>
+<td align="left">9</td>
+<td align="left">Yes</td>
+</tr>
+<tr class="odd">
+<td align="left">7/21/99</td>
+<td align="left">Wednesday</td>
+<td align="left">6</td>
+<td align="left">No</td>
+</tr>
+<tr class="even">
+<td align="left">7/23/1999</td>
+<td align="left">fridya</td>
+<td align="left">8</td>
+<td align="left">Yes</td>
+</tr>
+<tr class="odd">
+<td align="left">8/3/1999</td>
+<td align="left">Tuesday</td>
+<td align="left">7</td>
+<td align="left">Yes</td>
+</tr>
+<tr class="even">
+<td align="left">8/5/1999</td>
+<td align="left">Thursday</td>
+<td align="left">6</td>
+<td align="left">Y</td>
+</tr>
+<tr class="odd">
+<td align="left">8/16/1999</td>
+<td align="left">Modnay</td>
+<td align="left">8</td>
+<td align="left">Yes</td>
+</tr>
+<tr class="even">
+<td align="left">Aug 27 1999</td>
+<td align="left">Friday</td>
+<td align="left">4</td>
+<td align="left">Yes</td>
+</tr>
+<tr class="odd">
+<td align="left">August 31, 1999</td>
+<td align="left">Teusday</td>
+<td align="left">7</td>
+<td align="left">yep</td>
+</tr>
+<tr class="even">
+<td align="left">September 1, 1999</td>
+<td align="left">Wednesday</td>
+<td align="left">11</td>
+<td align="left">Yes</td>
+</tr>
+<tr class="odd">
+<td align="left">9/10/1999</td>
+<td align="left">Friday</td>
+<td align="left">7</td>
+<td align="left">Yes</td>
+</tr>
+<tr class="even">
+<td align="left">9/20/1999</td>
+<td align="left">Monday</td>
+<td align="left">7</td>
+<td align="left">No</td>
+</tr>
+<tr class="odd">
+<td align="left">9/23/1999</td>
+<td align="left">thursdayy</td>
+<td align="left">7.5</td>
+<td align="left">Yes</td>
+</tr>
+<tr class="even">
+<td align="left">9/28/1999</td>
+<td align="left">Monday</td>
+<td align="left">8</td>
+<td align="left">Yes</td>
+</tr>
+<tr class="odd">
+<td align="left">10/1/99</td>
+<td align="left">Friday</td>
+<td align="left">7</td>
+<td align="left">Y</td>
+</tr>
+<tr class="even">
+<td align="left">10/4/1999</td>
+<td align="left">Monday</td>
+<td align="left">6</td>
+<td align="left">Yes</td>
+</tr>
+<tr class="odd">
+<td align="left">10/5/1999</td>
+<td align="left">tuesday</td>
+<td align="left">9</td>
+<td align="left">Yes</td>
+</tr>
+<tr class="even">
+<td align="left">10/14/1999</td>
+<td align="left">Thursday</td>
+<td align="left">8</td>
+<td align="left">Yes</td>
+</tr>
+<tr class="odd">
+<td align="left">10/22/1999</td>
+<td align="left">Friday</td>
+<td align="left">7</td>
+<td align="left">No</td>
+</tr>
+<tr class="even">
+<td align="left">10/25/99</td>
+<td align="left">Monday</td>
+<td align="left">7</td>
+<td align="left">Yes</td>
+</tr>
+<tr class="odd">
+<td align="left">10/27/1999</td>
+<td align="left">Wednesday</td>
+<td align="left">8</td>
+<td align="left">Y</td>
+</tr>
+<tr class="even">
+<td align="left">11/2/1999</td>
+<td align="left">Tuesday</td>
+<td align="left">7</td>
+<td align="left">Yes</td>
+</tr>
+<tr class="odd">
+<td align="left">11/3/1999</td>
+<td align="left">Wednseday</td>
+<td align="left">8</td>
+<td align="left">Yes</td>
+</tr>
+<tr class="even">
+<td align="left">11/8/1999</td>
+<td align="left">monday</td>
+<td align="left">5</td>
+<td align="left">Yes</td>
+</tr>
+<tr class="odd">
+<td align="left">11/18/99</td>
+<td align="left">Thursday</td>
+<td align="left">8</td>
+<td align="left">No</td>
+</tr>
+<tr class="even">
+<td align="left">12/1/1999</td>
+<td align="left">Wednesday</td>
+<td align="left">7</td>
+<td align="left">Yes</td>
+</tr>
+<tr class="odd">
+<td align="left">12/3/1999</td>
+<td align="left">Friday</td>
+<td align="left">6</td>
+<td align="left">N</td>
+</tr>
+<tr class="even">
+<td align="left">12/6/1999</td>
+<td align="left">Monday</td>
+<td align="left">6.5</td>
+<td align="left">Yes</td>
+</tr>
+<tr class="odd">
+<td align="left">12/13/1999</td>
+<td align="left">Monday</td>
+<td align="left">9</td>
+<td align="left">Yes</td>
+</tr>
+<tr class="even">
+<td align="left">12/16/1999</td>
+<td align="left">Thursday</td>
+<td align="left">7</td>
+<td align="left">Yes</td>
+</tr>
+<tr class="odd">
+<td align="left">12/21/99</td>
+<td align="left">Tuesday</td>
+<td align="left">8</td>
+<td align="left">Y</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="refine_upload" class="section level2">
+<h2><code>refine_upload()</code></h2>
+<p>While all of the data cleaning here could be performed using R, this is a typical scenario for <em>OpenRefine</em> users. The first step to creating a new project is to make sure <em>OpenRefine</em> is installed and running locally at <code>http://127.0.0.1:3333/</code><a href="#fn3" class="footnoteRef" id="fnref3"><sup>3</sup></a>. The <code>refine_upload()</code> function allows you to pass the contents of a comma separted value (csv) along with a project name (optional) and an argument to automatically open the browser in which <em>OpenRefine</em> is running. The example below demonstrates this workflow using the <code>lateformeeting</code> sample data:</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">write.csv</span>(lateformeeting, <span class="dt">file =</span> <span class="st">&quot;lateformeeting.csv&quot;</span>, <span class="dt">row.names =</span> <span class="ot">FALSE</span>)
+<span class="kw">refine_upload</span>(<span class="dt">file =</span> <span class="st">&quot;lateformeeting.csv&quot;</span>, <span class="dt">project.name =</span> <span class="st">&quot;lfm_cleanup&quot;</span>, <span class="dt">open.browser =</span> <span class="ot">TRUE</span>)</code></pre>
+<p>With the project uploaded, you can perform any of the desired clean-up procedures in <em>OpenRefine</em>.</p>
+</div>
+<div id="refine_export" class="section level2">
+<h2><code>refine_export()</code></h2>
+<p>Once you’ve cleaned up the data in <em>OpenRefine</em> you can pull it back into R for plotting, modeling, etc. by using <code>refine_export()</code>. This function will accept <em>either</em> the project name or the numerical unique identifier. It is only necessary to use <em>both</em> if there are multiple projects with the same name in your <em>OpenRefine</em> application. Note that here, the data is exported directly into R as a data frame, and you can assign it to a new object.</p>
+<pre class="sourceCode r"><code class="sourceCode r">lfm_clean &lt;-<span class="st"> </span><span class="kw">refine_export</span>(<span class="dt">project.name =</span> <span class="st">&quot;lfm_cleanup&quot;</span>)
+lfm_clean</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">date</th>
+<th align="left">dotw</th>
+<th align="right">hours.slept</th>
+<th align="left">on.time</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">1999-01-08T00:00:00Z</td>
+<td align="left">Friday</td>
+<td align="right">7.0</td>
+<td align="left">Yes</td>
+</tr>
+<tr class="even">
+<td align="left">1999-01-15T00:00:00Z</td>
+<td align="left">Friday</td>
+<td align="right">5.0</td>
+<td align="left">No</td>
+</tr>
+<tr class="odd">
+<td align="left">1999-01-25T00:00:00Z</td>
+<td align="left">Monday</td>
+<td align="right">8.0</td>
+<td align="left">No</td>
+</tr>
+<tr class="even">
+<td align="left">1999-01-28T00:00:00Z</td>
+<td align="left">Thursday</td>
+<td align="right">8.0</td>
+<td align="left">Yes</td>
+</tr>
+<tr class="odd">
+<td align="left">1999-02-09T00:00:00Z</td>
+<td align="left">Tuesday</td>
+<td align="right">6.0</td>
+<td align="left">Yes</td>
+</tr>
+<tr class="even">
+<td align="left">1999-02-11T00:00:00Z</td>
+<td align="left">Thursday</td>
+<td align="right">7.0</td>
+<td align="left">No</td>
+</tr>
+<tr class="odd">
+<td align="left">1999-02-15T00:00:00Z</td>
+<td align="left">Monday</td>
+<td align="right">8.0</td>
+<td align="left">Yes</td>
+</tr>
+<tr class="even">
+<td align="left">1999-02-19T00:00:00Z</td>
+<td align="left">Friday</td>
+<td align="right">10.0</td>
+<td align="left">Yes</td>
+</tr>
+<tr class="odd">
+<td align="left">1999-03-03T00:00:00Z</td>
+<td align="left">Wednesday</td>
+<td align="right">5.0</td>
+<td align="left">No</td>
+</tr>
+<tr class="even">
+<td align="left">1999-03-04T00:00:00Z</td>
+<td align="left">Thursday</td>
+<td align="right">9.0</td>
+<td align="left">Yes</td>
+</tr>
+<tr class="odd">
+<td align="left">1999-03-05T00:00:00Z</td>
+<td align="left">Friday</td>
+<td align="right">8.0</td>
+<td align="left">Yes</td>
+</tr>
+<tr class="even">
+<td align="left">1999-03-08T00:00:00Z</td>
+<td align="left">Monday</td>
+<td align="right">11.0</td>
+<td align="left">Yes</td>
+</tr>
+<tr class="odd">
+<td align="left">1999-03-15T00:00:00Z</td>
+<td align="left">Monday</td>
+<td align="right">8.0</td>
+<td align="left">Yes</td>
+</tr>
+<tr class="even">
+<td align="left">1999-03-16T00:00:00Z</td>
+<td align="left">Tuesday</td>
+<td align="right">8.0</td>
+<td align="left">Yes</td>
+</tr>
+<tr class="odd">
+<td align="left">1999-03-17T00:00:00Z</td>
+<td align="left">Wednesday</td>
+<td align="right">6.5</td>
+<td align="left">No</td>
+</tr>
+<tr class="even">
+<td align="left">1999-04-01T00:00:00Z</td>
+<td align="left">Thursday</td>
+<td align="right">7.0</td>
+<td align="left">Yes</td>
+</tr>
+<tr class="odd">
+<td align="left">1999-04-12T00:00:00Z</td>
+<td align="left">Monday</td>
+<td align="right">8.0</td>
+<td align="left">Yes</td>
+</tr>
+<tr class="even">
+<td align="left">1999-04-20T00:00:00Z</td>
+<td align="left">Tuesday</td>
+<td align="right">10.0</td>
+<td align="left">Yes</td>
+</tr>
+<tr class="odd">
+<td align="left">1999-04-27T00:00:00Z</td>
+<td align="left">Tuesday</td>
+<td align="right">7.0</td>
+<td align="left">Yes</td>
+</tr>
+<tr class="even">
+<td align="left">1999-05-05T00:00:00Z</td>
+<td align="left">Wednesday</td>
+<td align="right">6.0</td>
+<td align="left">No</td>
+</tr>
+<tr class="odd">
+<td align="left">1999-05-12T00:00:00Z</td>
+<td align="left">Wednesday</td>
+<td align="right">9.0</td>
+<td align="left">Yes</td>
+</tr>
+<tr class="even">
+<td align="left">1999-05-13T00:00:00Z</td>
+<td align="left">Thursday</td>
+<td align="right">7.0</td>
+<td align="left">Yes</td>
+</tr>
+<tr class="odd">
+<td align="left">1999-05-17T00:00:00Z</td>
+<td align="left">Monday</td>
+<td align="right">7.5</td>
+<td align="left">Yes</td>
+</tr>
+<tr class="even">
+<td align="left">1999-05-25T00:00:00Z</td>
+<td align="left">Tuesday</td>
+<td align="right">8.0</td>
+<td align="left">Yes</td>
+</tr>
+<tr class="odd">
+<td align="left">1999-05-27T00:00:00Z</td>
+<td align="left">Thursday</td>
+<td align="right">8.0</td>
+<td align="left">No</td>
+</tr>
+<tr class="even">
+<td align="left">1999-06-01T00:00:00Z</td>
+<td align="left">Tuesday</td>
+<td align="right">7.0</td>
+<td align="left">Yes</td>
+</tr>
+<tr class="odd">
+<td align="left">1999-06-07T00:00:00Z</td>
+<td align="left">Monday</td>
+<td align="right">10.0</td>
+<td align="left">Yes</td>
+</tr>
+<tr class="even">
+<td align="left">1999-06-11T00:00:00Z</td>
+<td align="left">Friday</td>
+<td align="right">6.0</td>
+<td align="left">No</td>
+</tr>
+<tr class="odd">
+<td align="left">1999-06-15T00:00:00Z</td>
+<td align="left">Tuesday</td>
+<td align="right">8.0</td>
+<td align="left">Yes</td>
+</tr>
+<tr class="even">
+<td align="left">1999-06-24T00:00:00Z</td>
+<td align="left">Thursday</td>
+<td align="right">7.5</td>
+<td align="left">Yes</td>
+</tr>
+<tr class="odd">
+<td align="left">1999-07-01T00:00:00Z</td>
+<td align="left">Thursday</td>
+<td align="right">7.0</td>
+<td align="left">No</td>
+</tr>
+<tr class="even">
+<td align="left">1999-07-06T00:00:00Z</td>
+<td align="left">Wednesday</td>
+<td align="right">5.0</td>
+<td align="left">Yes</td>
+</tr>
+<tr class="odd">
+<td align="left">1999-07-12T00:00:00Z</td>
+<td align="left">Monday</td>
+<td align="right">8.0</td>
+<td align="left">Yes</td>
+</tr>
+<tr class="even">
+<td align="left">1999-07-20T00:00:00Z</td>
+<td align="left">Tuesday</td>
+<td align="right">9.0</td>
+<td align="left">Yes</td>
+</tr>
+<tr class="odd">
+<td align="left">1999-07-21T00:00:00Z</td>
+<td align="left">Wednesday</td>
+<td align="right">6.0</td>
+<td align="left">No</td>
+</tr>
+<tr class="even">
+<td align="left">1999-07-23T00:00:00Z</td>
+<td align="left">Friday</td>
+<td align="right">8.0</td>
+<td align="left">Yes</td>
+</tr>
+<tr class="odd">
+<td align="left">1999-08-03T00:00:00Z</td>
+<td align="left">Tuesday</td>
+<td align="right">7.0</td>
+<td align="left">Yes</td>
+</tr>
+<tr class="even">
+<td align="left">1999-08-05T00:00:00Z</td>
+<td align="left">Thursday</td>
+<td align="right">6.0</td>
+<td align="left">Yes</td>
+</tr>
+<tr class="odd">
+<td align="left">1999-08-16T00:00:00Z</td>
+<td align="left">Monday</td>
+<td align="right">8.0</td>
+<td align="left">Yes</td>
+</tr>
+<tr class="even">
+<td align="left">1999-08-27T00:00:00Z</td>
+<td align="left">Friday</td>
+<td align="right">4.0</td>
+<td align="left">Yes</td>
+</tr>
+<tr class="odd">
+<td align="left">1999-08-31T00:00:00Z</td>
+<td align="left">Tuesday</td>
+<td align="right">7.0</td>
+<td align="left">Yes</td>
+</tr>
+<tr class="even">
+<td align="left">1999-09-01T00:00:00Z</td>
+<td align="left">Wednesday</td>
+<td align="right">11.0</td>
+<td align="left">Yes</td>
+</tr>
+<tr class="odd">
+<td align="left">1999-09-10T00:00:00Z</td>
+<td align="left">Friday</td>
+<td align="right">7.0</td>
+<td align="left">Yes</td>
+</tr>
+<tr class="even">
+<td align="left">1999-09-20T00:00:00Z</td>
+<td align="left">Monday</td>
+<td align="right">7.0</td>
+<td align="left">No</td>
+</tr>
+<tr class="odd">
+<td align="left">1999-09-23T00:00:00Z</td>
+<td align="left">Thursday</td>
+<td align="right">7.5</td>
+<td align="left">Yes</td>
+</tr>
+<tr class="even">
+<td align="left">1999-09-28T00:00:00Z</td>
+<td align="left">Monday</td>
+<td align="right">8.0</td>
+<td align="left">Yes</td>
+</tr>
+<tr class="odd">
+<td align="left">1999-10-01T00:00:00Z</td>
+<td align="left">Friday</td>
+<td align="right">7.0</td>
+<td align="left">Yes</td>
+</tr>
+<tr class="even">
+<td align="left">1999-10-04T00:00:00Z</td>
+<td align="left">Monday</td>
+<td align="right">6.0</td>
+<td align="left">Yes</td>
+</tr>
+<tr class="odd">
+<td align="left">1999-10-05T00:00:00Z</td>
+<td align="left">Tuesday</td>
+<td align="right">9.0</td>
+<td align="left">Yes</td>
+</tr>
+<tr class="even">
+<td align="left">1999-10-14T00:00:00Z</td>
+<td align="left">Thursday</td>
+<td align="right">8.0</td>
+<td align="left">Yes</td>
+</tr>
+<tr class="odd">
+<td align="left">1999-10-22T00:00:00Z</td>
+<td align="left">Friday</td>
+<td align="right">7.0</td>
+<td align="left">No</td>
+</tr>
+<tr class="even">
+<td align="left">1999-10-25T00:00:00Z</td>
+<td align="left">Monday</td>
+<td align="right">7.0</td>
+<td align="left">Yes</td>
+</tr>
+<tr class="odd">
+<td align="left">1999-10-27T00:00:00Z</td>
+<td align="left">Wednesday</td>
+<td align="right">8.0</td>
+<td align="left">Yes</td>
+</tr>
+<tr class="even">
+<td align="left">1999-11-02T00:00:00Z</td>
+<td align="left">Tuesday</td>
+<td align="right">7.0</td>
+<td align="left">Yes</td>
+</tr>
+<tr class="odd">
+<td align="left">1999-11-03T00:00:00Z</td>
+<td align="left">Wednesday</td>
+<td align="right">8.0</td>
+<td align="left">Yes</td>
+</tr>
+<tr class="even">
+<td align="left">1999-11-08T00:00:00Z</td>
+<td align="left">Monday</td>
+<td align="right">5.0</td>
+<td align="left">Yes</td>
+</tr>
+<tr class="odd">
+<td align="left">1999-11-18T00:00:00Z</td>
+<td align="left">Thursday</td>
+<td align="right">8.0</td>
+<td align="left">No</td>
+</tr>
+<tr class="even">
+<td align="left">1999-12-01T00:00:00Z</td>
+<td align="left">Wednesday</td>
+<td align="right">7.0</td>
+<td align="left">Yes</td>
+</tr>
+<tr class="odd">
+<td align="left">1999-12-03T00:00:00Z</td>
+<td align="left">Friday</td>
+<td align="right">6.0</td>
+<td align="left">No</td>
+</tr>
+<tr class="even">
+<td align="left">1999-12-06T00:00:00Z</td>
+<td align="left">Monday</td>
+<td align="right">6.5</td>
+<td align="left">Yes</td>
+</tr>
+<tr class="odd">
+<td align="left">1999-12-13T00:00:00Z</td>
+<td align="left">Monday</td>
+<td align="right">9.0</td>
+<td align="left">Yes</td>
+</tr>
+<tr class="even">
+<td align="left">1999-12-16T00:00:00Z</td>
+<td align="left">Thursday</td>
+<td align="right">7.0</td>
+<td align="left">Yes</td>
+</tr>
+<tr class="odd">
+<td align="left">1999-12-21T00:00:00Z</td>
+<td align="left">Tuesday</td>
+<td align="right">8.0</td>
+<td align="left">Yes</td>
+</tr>
+</tbody>
+</table>
+<p>From there the clean data is available for analyses that couldn’t have been performed in its original format.</p>
+</div>
+<div id="refine_delete" class="section level2">
+<h2><code>refine_delete()</code></h2>
+<p>To clean up your <em>OpenRefine</em> workspace you can delete projects using <code>refine_delete()</code>. Just like <code>refine_export()</code> it’s possible to pass <em>either</em> a project name or unique identifier to this function. And it is only necessary to use <em>both</em> if there are multiple projects with the same name.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">refine_delete</span>(<span class="dt">project.name =</span> <span class="st">&quot;lfm_cleanup&quot;</span>)</code></pre>
+</div>
+<div id="references" class="section level2">
+<h2>References</h2>
+</div>
+<div class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p><a href="http://openrefine.org/" class="uri">http://openrefine.org/</a><a href="#fnref1">↩</a></p></li>
+<li id="fn2"><p><a href="https://github.com/OpenRefine/OpenRefine/wiki/Documentation-For-Developers#known-client-libraries-for-refine" class="uri">https://github.com/OpenRefine/OpenRefine/wiki/Documentation-For-Developers#known-client-libraries-for-refine</a><a href="#fnref2">↩</a></p></li>
+<li id="fn3"><p><a href="http://openrefine.org/download.html" class="uri">http://openrefine.org/download.html</a><a href="#fnref3">↩</a></p></li>
+</ol>
+</div>
+
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
