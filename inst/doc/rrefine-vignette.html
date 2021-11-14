@@ -12,7 +12,7 @@
 
 <meta name="author" content="VP Nagraj" />
 
-<meta name="date" content="2021-10-03" />
+<meta name="date" content="2021-11-14" />
 
 <title>rrefine</title>
 
@@ -141,20 +141,22 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <h1 class="title toc-ignore">rrefine</h1>
 <h4 class="author">VP Nagraj</h4>
-<h4 class="date">2021-10-03</h4>
+<h4 class="date">2021-11-14</h4>
 
 
 
 <div id="introduction" class="section level2">
 <h2>Introduction</h2>
-<p><em>OpenRefine</em> (formerly <em>Google Refine</em>) is a popular, open source data cleaning software<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a>. <strong>rrefine</strong> enables users to programmatically trigger data transfer between R and <em>OpenRefine</em>. Using the functions avaialable in this package, you can import, export or delete a project in <em>OpenRefine</em> directly from an R script. There are several client libraries for automating <em>OpenRefine</em> tasks via Python, nodeJS and Ruby<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a>. <strong>rrefine</strong> extends this functionality to R users.</p>
+<p><strong>OpenRefine</strong> (formerly <strong>Google Refine</strong>) is a popular, open source data cleaning software<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a>. <strong>rrefine</strong> enables users to programmatically trigger data transfer between R and <strong>OpenRefine</strong>. Using the functions available in this package, you can import, export, apply data cleaning operations, or delete a project in <strong>OpenRefine</strong> directly from R. There are several client libraries for automating <strong>OpenRefine</strong> tasks via Python, nodeJS and Ruby<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a>. <strong>rrefine</strong> extends this functionality to R users.</p>
 </div>
 <div id="installation" class="section level2">
 <h2>Installation</h2>
-<p>The latest version of <strong>rrefine</strong> is availabe on <a href="https://github.com/vpnagraj/rrefine">Github</a> and can be installed via <strong>devtools</strong> by using the following:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages(&quot;devtools&quot;)</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">&quot;vpnagraj/rrefine&quot;</span>)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rrefine)</span></code></pre></div>
+<p><strong>rrefine</strong> is available on CRAN:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">&quot;rrefine&quot;</span>)</span></code></pre></div>
+<p>The latest version of the package is also available on <a href="https://github.com/vpnagraj/rrefine">GitHub</a> and can be installed via <strong>devtools</strong> by using the following:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages(&quot;devtools&quot;)</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">&quot;vpnagraj/rrefine&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rrefine)</span></code></pre></div>
 </div>
 <div id="lateformeeting" class="section level2">
 <h2><code>lateformeeting</code></h2>
@@ -552,16 +554,57 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="refine_upload" class="section level2">
 <h2><code>refine_upload()</code></h2>
-<p>While all of the data cleaning here could be performed using R, this is a typical scenario for <em>OpenRefine</em> users. The first step to creating a new project is to make sure <em>OpenRefine</em> is installed and running locally at <code>http://127.0.0.1:3333/</code><a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a>. The <code>refine_upload()</code> function allows you to pass the contents of a comma separted value (csv) along with a project name (optional) and an argument to automatically open the browser in which <em>OpenRefine</em> is running. The example below demonstrates this workflow using the <code>lateformeeting</code> sample data:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(lateformeeting, <span class="at">file =</span> <span class="st">&quot;lateformeeting.csv&quot;</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">refine_upload</span>(<span class="at">file =</span> <span class="st">&quot;lateformeeting.csv&quot;</span>, <span class="at">project.name =</span> <span class="st">&quot;lfm_cleanup&quot;</span>, <span class="at">open.browser =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
-<p>With the project uploaded, you can perform any of the desired clean-up procedures in <em>OpenRefine</em>.</p>
+<p>While the data cleaning could be performed using R, the operations here describe a typical scenario for <strong>OpenRefine</strong> users. The first step to creating a new project is to make sure <strong>OpenRefine</strong> is installed and running<a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a>. By default, the application will run locally at <code>http://127.0.0.1:3333/</code>. All of the functions in <strong>rrefine</strong> will assume the default local host name and port, however these can both be overridden<a href="#fn4" class="footnote-ref" id="fnref4"><sup>4</sup></a>. Additionally, as of <code>v1.1.0</code> the package will internally connect to the <strong>OpenRefine</strong> instance using a CSRF token in API requests<a href="#fn5" class="footnote-ref" id="fnref5"><sup>5</sup></a>. The <code>refine_upload()</code> function allows you to pass the contents of a delimited text file (csv or tsv) along with a project name (optional) and an argument to automatically open the browser in which <strong>OpenRefine</strong> is running. The example below demonstrates this workflow using the <code>lateformeeting</code> sample data:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(lateformeeting, <span class="at">file =</span> <span class="st">&quot;lateformeeting.csv&quot;</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">refine_upload</span>(<span class="at">file =</span> <span class="st">&quot;lateformeeting.csv&quot;</span>, <span class="at">project.name =</span> <span class="st">&quot;lfm_cleanup&quot;</span>, <span class="at">open.browser =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<p>With the project uploaded, you can perform any of the desired clean-up procedures in <strong>OpenRefine</strong>.</p>
+</div>
+<div id="refine_operations" class="section level2">
+<h2><code>refine_operations()</code></h2>
+<p>Whether the data in <strong>OpenRefine</strong> has been uploaded via <code>refine_upload()</code> or another method, users can programmatically apply operations to projects using <code>refine_operations()</code>. This function will pass an arbitrary list of data cleaning operations to the specified project. Operations must be defined in valid JSON format<a href="#fn6" class="footnote-ref" id="fnref6"><sup>6</sup></a>. In addition to the generic <code>refine_operations()</code> that can flexibly accept any valid JSON operation, the <strong>rrefine</strong> package includes a series of wrapper functions to perform common data cleaning procedures:</p>
+<ul>
+<li><code>refine_remove_column()</code>: Remove a column from a project</li>
+<li><code>refine_add_column()</code>: Add a column to a project</li>
+<li><code>refine_rename_column()</code>: Rename an existing column in a project</li>
+<li><code>refine_move_column()</code>: Move a column to a new index</li>
+<li><code>refine_transform()</code>: Apply arbitrary text transformations</li>
+<li><code>refine_to_lower()</code>: Coerce text to lowercase</li>
+<li><code>refine_to_upper()</code>: Coerce text to uppercase</li>
+<li><code>refine_to_title()</code>: Coerce text to title case</li>
+<li><code>refine_to_null()</code>: Set values to <code>NULL</code></li>
+<li><code>refine_to_empty()</code>: Set text values to empty string (<code>&quot;&quot;</code>)</li>
+<li><code>refine_to_text()</code>: Coerce value to string</li>
+<li><code>refine_to_number()</code>: Coerce value to numeric</li>
+<li><code>refine_to_date()</code>: Coerce value to date</li>
+<li><code>refine_trim_whitespace()</code>: Remove leading and trailing whitespaces</li>
+<li><code>refine_collapse_whitespace()</code>: Collapse consecutive whitespaces to single whitespace</li>
+<li><code>refine_unescape_html()</code>: Unescape HTML in string</li>
+</ul>
+<p>The example below demonstrates several operations using the <code>lateformeeting</code> sample data:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">refine_add_column</span>(<span class="at">new_column =</span> <span class="st">&quot;dotw_allcaps&quot;</span>, </span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>                  <span class="at">base_column =</span> <span class="st">&quot;what.day.whas.it&quot;</span>, </span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>                  <span class="at">value =</span> <span class="st">&quot;grel:value&quot;</span>,</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>                  <span class="at">project.name =</span> <span class="st">&quot;lfm_cleanup&quot;</span>)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="fu">refine_to_upper</span>(<span class="at">column_name =</span> <span class="st">&quot;dotw_allcaps&quot;</span>, <span class="at">project.name =</span> <span class="st">&quot;lfm_cleanup&quot;</span>)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="fu">refine_export</span>(<span class="at">project.name =</span> <span class="st">&quot;lfm_cleanup&quot;</span>)<span class="sc">$</span>dotw_allcaps</span></code></pre></div>
+<pre><code>##  [1] &quot;FRIDAY&quot;    &quot;FRIDAY&quot;    &quot;MONDAY&quot;    &quot;THURSDAY&quot;  &quot;TUESDAY&quot;   &quot;THURSDAY&quot; 
+##  [7] &quot;MONDAY&quot;    &quot;FRIDAY&quot;    &quot;WEDNESDAY&quot; &quot;THURSDAY&quot;  &quot;FRIDAY&quot;    &quot;MONDAY&quot;   
+## [13] &quot;MONDAY&quot;    &quot;TUESDAY&quot;   &quot;WEDNESDAY&quot; &quot;THURSDAY&quot;  &quot;MONDAY&quot;    &quot;TUESDAY&quot;  
+## [19] &quot;TUESDAY&quot;   &quot;WEDNESDAY&quot; &quot;WEDNESDAY&quot; &quot;THURSDAY&quot;  &quot;MONDAY&quot;    &quot;TUESDAY&quot;  
+## [25] &quot;THURSDAY&quot;  &quot;TUESDAY&quot;   &quot;MONDAY&quot;    &quot;FRIDAY&quot;    &quot;TUESDAY&quot;   &quot;THURSDAY&quot; 
+## [31] &quot;THURSDAY&quot;  &quot;WEDNESDAY&quot; &quot;MONDAY&quot;    &quot;TUESDAY&quot;   &quot;WEDNESDAY&quot; &quot;FRIDAY&quot;   
+## [37] &quot;TUESDAY&quot;   &quot;THURSDAY&quot;  &quot;MONDAY&quot;    &quot;FRIDAY&quot;    &quot;TUESDAY&quot;   &quot;WEDNESDAY&quot;
+## [43] &quot;FRIDAY&quot;    &quot;MONDAY&quot;    &quot;THURSDAY&quot;  &quot;MONDAY&quot;    &quot;FRIDAY&quot;    &quot;MONDAY&quot;   
+## [49] &quot;TUESDAY&quot;   &quot;THURSDAY&quot;  &quot;FRIDAY&quot;    &quot;MONDAY&quot;    &quot;WEDNESDAY&quot; &quot;TUESDAY&quot;  
+## [55] &quot;WEDNESDAY&quot; &quot;MONDAY&quot;    &quot;THURSDAY&quot;  &quot;WEDNESDAY&quot; &quot;FRIDAY&quot;    &quot;MONDAY&quot;   
+## [61] &quot;MONDAY&quot;    &quot;THURSDAY&quot;  &quot;TUESDAY&quot;</code></pre>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">refine_remove_column</span>(<span class="at">column =</span> <span class="st">&quot;dotw_allcaps&quot;</span>, <span class="at">project.name =</span> <span class="st">&quot;lfm_cleanup&quot;</span>)</span></code></pre></div>
 </div>
 <div id="refine_export" class="section level2">
 <h2><code>refine_export()</code></h2>
-<p>Once you’ve cleaned up the data in <em>OpenRefine</em> you can pull it back into R for plotting, modeling, etc. by using <code>refine_export()</code>. This function will accept <em>either</em> the project name or the numerical unique identifier. It is only necessary to use <em>both</em> if there are multiple projects with the same name in your <em>OpenRefine</em> application. Note that here, the data is exported directly into R as a data frame, and you can assign it to a new object.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>lfm_clean <span class="ot">&lt;-</span> <span class="fu">refine_export</span>(<span class="at">project.name =</span> <span class="st">&quot;lfm_cleanup&quot;</span>)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>lfm_clean</span></code></pre></div>
+<p>Once you’ve cleaned up the data in <strong>OpenRefine</strong> you can pull it back into R for plotting, modeling, etc. by using <code>refine_export()</code>. This function will accept <em>either</em> the project name or the numerical unique identifier. It is only necessary to use <em>both</em> if there are multiple projects with the same name in your <strong>OpenRefine</strong> application. Note that the data is exported directly into R as a data frame and you can assign it to a new object.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>lfm_clean <span class="ot">&lt;-</span> <span class="fu">refine_export</span>(<span class="at">project.name =</span> <span class="st">&quot;lfm_cleanup&quot;</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>lfm_clean</span></code></pre></div>
 <table>
 <thead>
 <tr class="header">
@@ -956,8 +999,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="refine_delete" class="section level2">
 <h2><code>refine_delete()</code></h2>
-<p>To clean up your <em>OpenRefine</em> workspace you can delete projects using <code>refine_delete()</code>. Just like <code>refine_export()</code> it’s possible to pass <em>either</em> a project name or unique identifier to this function. And it is only necessary to use <em>both</em> if there are multiple projects with the same name.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">refine_delete</span>(<span class="at">project.name =</span> <span class="st">&quot;lfm_cleanup&quot;</span>)</span></code></pre></div>
+<p>To clean up your <strong>OpenRefine</strong> workspace you can delete projects using <code>refine_delete()</code>. Just like <code>refine_export()</code> it’s possible to pass <em>either</em> a project name or unique identifier to this function. And it is only necessary to use <em>both</em> if there are multiple projects with the same name.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">refine_delete</span>(<span class="at">project.name =</span> <span class="st">&quot;lfm_cleanup&quot;</span>)</span></code></pre></div>
 </div>
 <div id="references" class="section level2">
 <h2>References</h2>
@@ -966,8 +1009,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <hr />
 <ol>
 <li id="fn1"><p><a href="https://openrefine.org/" class="uri">https://openrefine.org/</a><a href="#fnref1" class="footnote-back">↩︎</a></p></li>
-<li id="fn2"><p><a href="https://github.com/OpenRefine/OpenRefine/wiki/Documentation-For-Developers#known-client-libraries-for-refine" class="uri">https://github.com/OpenRefine/OpenRefine/wiki/Documentation-For-Developers#known-client-libraries-for-refine</a><a href="#fnref2" class="footnote-back">↩︎</a></p></li>
+<li id="fn2"><p><a href="https://docs.openrefine.org/technical-reference/openrefine-api#third-party-software-libraries" class="uri">https://docs.openrefine.org/technical-reference/openrefine-api#third-party-software-libraries</a><a href="#fnref2" class="footnote-back">↩︎</a></p></li>
 <li id="fn3"><p><a href="https://openrefine.org/download.html" class="uri">https://openrefine.org/download.html</a><a href="#fnref3" class="footnote-back">↩︎</a></p></li>
+<li id="fn4"><p>For documentation on how to specify a different host or port number see <code>?refine_path()</code>.<a href="#fnref4" class="footnote-back">↩︎</a></p></li>
+<li id="fn5"><p><a href="https://github.com/OpenRefine/OpenRefine/wiki/Changes-for-3.3#csrf-protection-changes" class="uri">https://github.com/OpenRefine/OpenRefine/wiki/Changes-for-3.3#csrf-protection-changes</a><a href="#fnref5" class="footnote-back">↩︎</a></p></li>
+<li id="fn6"><p><a href="https://docs.openrefine.org/technical-reference/openrefine-api#apply-operations" class="uri">https://docs.openrefine.org/technical-reference/openrefine-api#apply-operations</a><a href="#fnref6" class="footnote-back">↩︎</a></p></li>
 </ol>
 </div>
 
